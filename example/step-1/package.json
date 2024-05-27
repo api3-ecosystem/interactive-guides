@@ -1,0 +1,6 @@
+	{
+		"name": "example",
+		"scripts": { "hello": "node index.js", "start": "serve node_modules" },
+		"dependencies": { "serve": "^14.0.0" },
+		"stackblitz": { "installDependencies": true, "startCommand": "npm run hello" }
+	 }
