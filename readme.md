@@ -1,3 +1,4 @@
-# Step 2
+## Step 3
 
-This is an example of how to structure the guides.
+
+This is the end
