@@ -1,28 +1,40 @@
-## Code explanation
+## Setting the dAPI Proxy Address
 
-- The contract `DataFeedReaderExample` imports the `Ownable` contract, which is
-  used to restrict certain actions to the owner of the contract.
+To set the dAPI proxy address, we will use the `setProxyAddress()` function in the `DataFeedReaderExample` contract. This function allows the owner of the contract to update the proxy contract address.
 
-- The contract imports the `IProxy` interface from the
-  `@api3/contracts/api3-server-v1/proxies/interfaces/IProxy.sol` library, which
-  defines a function called `read()` that reads data from a dAPI data feed. Be
-  sure to use the proper IProxy interface version for the version of Solidity
-  you are using, see
-  [IProxy Interface](/reference/dapis/understand/proxy-contracts.md#iproxy-interface-contracts).
+Get the proxy address for a dAPI from the [API3 Market](https://market.api3.org) and set it in the `DataFeedReaderExample` contract.
 
-- The contract has a public variable called `proxyAddress` which is the address
-  of the proxy contract that will be used to access the desired dAPI via its
-  proxy contract. The `setProxyAddress()` function is a public function that
-  allows the owner of the contract to update the proxy contract address.
+Create a new file named `set-proxy-address.js` in the `scripts` directory and add the following code:
 
-* The `readDataFeed()` function is a public function that reads from a dAPI
-  through the IProxy interface. The function returns two values representing the
-  latest `value` with 18 decimals (type int224) and `timestamp` (type uint256)
-  of the dAPI that the proxy is reading from.
+Set your proxy address in `DapiProxy`.
 
-## Summary
+```javascript
+const hre = require('hardhat');
 
-For additional information on how to read from a dAPI proxy, please refer to the
-[datafeed-reader-example](https://github.com/api3dao/data-feed-reader-example)
-repository which contains a hardhat project with a sample smart contract that
-reads from a dAPI proxy.
+async function main() {
+
+  const Reader = await hre.deployments.get("DataFeedReaderExample");
+  const reader = new hre.ethers.Contract(
+    Reader.address,
+    Reader.abi,
+    hre.ethers.provider.getSigner()
+  );
+const DapiProxy = "<YOUR-PROXY-ADDRESS-FROM-API3-MARKET>";
+// setDapiProxy
+  const setDapiProxy = await reader.setDapiProxyAddress(DapiProxy);
+  await setDapiProxy.wait();
+  console.log("dAPI Proxy Set!");
+  }
+  main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+```
+
+To run this script, use the following command:
+
+```bash
+yarn hardhat run scripts/set-proxy-address.js --network sepolia
+```
