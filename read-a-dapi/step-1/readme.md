@@ -1,48 +1,55 @@
-## Coding the `DapiReader.sol` Contract
+## Setting up the project
 
-In this step, we will code the `DapiReader.sol` contract. This contract will be responsible for reading the data from a dAPI.
+- To set up an empty project, you can use the following command:
 
-### Create the `DapiReader.sol` Contract
-
-Create a new file named `DapiReader.sol` in the `contracts` directory and add the following code:
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
-
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@api3/contracts/api3-server-v1/proxies/interfaces/IProxy.sol";
-
-contract DataFeedReaderExample is Ownable {
-    // The proxy contract address obtained from the API3 Market UI.
-    address public proxyAddress;
-
-    // Updating the proxy contract address is a security-critical
-    // action. In this example, only the owner is allowed to do so.
-    function setProxyAddress(address _proxyAddress) public onlyOwner {
-        proxyAddress = _proxyAddress;
-    }
-
-    function readDataFeed()
-        external
-        view
-        returns (int224 value, uint256 timestamp)
-    {
-        // Use the IProxy interface to read a dAPI via its
-        // proxy contract .
-        (value, timestamp) = IProxy(proxyAddress).read();
-        // If you have any assumptions about `value` and `timestamp`,
-        // make sure to validate them after reading from the proxy.
-    }
-}
+```bash
+yarn init -y
 ```
 
-### Explanation
+- Add the following packages to your project:
 
-- The `DataFeedReaderExample` contract is an example contract that reads data from a dAPI.
+```bash
+yarn add hardhat @nomicfoundation/hardhat-chai-matchers @nomicfoundation/hardhat-ethers @nomicfoundation/hardhat-ignition @nomicfoundation/hardhat-ignition-ethers @nomicfoundation/hardhat-network-helpers @nomicfoundation/hardhat-toolbox @nomicfoundation/hardhat-verify @typechain/ethers-v6 @typechain/hardhat chai ethers@5.7.2 hardhat-gas-reporter solidity-coverage typechain hardhat-deploy @nomiclabs/hardhat-waffle @openzeppelin/contracts@4.9.5 @types/sinon-chai ethereum-waffle
+```
 
-- The contract imports the `IProxy` interface from the `@api3/contracts/api3-server-v1/proxies/interfaces/IProxy.sol` library, which defines a function called `read()` that reads data from a dAPI data feed.
+- Add the `@api3/contracts` package to your project to access the `IProxy` interface contract:
 
-- The contract has a public variable called `proxyAddress` which is the address of the proxy contract that will be used to access the desired dAPI via its proxy contract. The `setProxyAddress()` function is a public function that allows the owner of the contract to update the proxy contract address.
+```bash
+yarn add @api3/contracts
+```
 
-- The `readDataFeed()` function is a public function that reads from a dAPI through the `IProxy` interface. The function returns two values representing the latest `value` with 18 decimals (type `int224`) and `timestamp` (type `uint256`) of the dAPI that the proxy is reading from.
+- Make a `hardhat.config.js` file and add the following:
+
+```javascript
+require('@nomiclabs/hardhat-waffle');
+require('hardhat-deploy');
+
+credentials = require('./credentials.json');
+
+module.exports = {
+  networks: credentials.networks,
+  solidity: {
+    version: '0.8.17',
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
+  },
+};
+```
+
+- Make a `credentials.json` file and add the following. Make sure to add your *mnemonic*:
+
+```json
+{
+  "networks": {
+    "sepolia": {
+      "url": "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
+      "chainId": 11155111,
+      "accounts": { "mnemonic": "" }
+    }
+  }
+}
+```
