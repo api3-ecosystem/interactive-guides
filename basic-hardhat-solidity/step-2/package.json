@@ -1,0 +1,15 @@
+{
+  "name": "step-2",
+  "version": "1.0.0",
+  "description": "Create a new file `contracts/GetterSetter.sol` and add the following code:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "hardhat": "^2.22.8"
+  }
+}
