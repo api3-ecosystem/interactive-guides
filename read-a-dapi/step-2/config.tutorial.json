@@ -1,3 +1,4 @@
 {
-  "title": "Tutorial configs"
+  "openFile": ["credentials.json:L5-L8", "package.json:L1-L3"],
+  "view": "editor"
 }
